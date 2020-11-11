@@ -94,8 +94,3 @@ class WeatherScraper(HTMLParser):
     month_url = "&Month=" + str(month)
     #print(year_url,month_url)
     return urlstring + year_url + month_url
-
-if __name__ == "__main__":
-
-# https://climate.weather.gc.ca/climate_data/daily_data_e.html?StationID=27174&timeframe=2&StartYear=1840&EndYear=2018&Day=1&Year=1996&Month=10#
-# https://climate.weather.gc.ca/climate_data/daily_data_e.html?StationID=27174&timeframe=2&StartYear=1840&EndYear=2018&Day=1&Year=2020&Month=11#

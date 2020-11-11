@@ -10,18 +10,20 @@ import sqlite3
 
 class DBCM:
   """
-  This class maanges all components to using a database cursor.
+  This class manages all components to using a database cursor.
   """
 
-  def __init__(self, _filename, _mode):
-    self.db = "wpg_weather.sqlite"
+  def __init__(self, _db):
+    self.db = _db
 
   def __enter__(self):
     self.conn = sqlite3.connect(self.db)
-    self.cur = self.conn.cursor()
+    self.cursor = self.conn.cursor()
+    return self.cursor
 
   def __exit__(self, exc_type, exc_value, exc_trace):
     self.conn.commit()
+    self.cursor.close()
     self.conn.close()
 
 
