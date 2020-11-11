@@ -6,9 +6,10 @@ ADEV-3005 Programming in Python
 This Module uses the Python HTMLParser class to scrape Winnipeg weather data (min, max & mean temperatures)
 from the Environment Canada website, from the current date, as far back in time as is available.
 '''
-
-from html.parser import HTMLParser
 import urllib.request
+from html.parser import HTMLParser
+from datetime import date
+import pprint
 
 class WeatherScraper(HTMLParser):
   """
@@ -57,7 +58,7 @@ class WeatherScraper(HTMLParser):
     if self.stack[-3:] == ["tbody", "tr", "td"] or self.stack[-2:] == ["td", "a"] and self.count_col <= 3:
 
       if data == "M" or data == "\xa0":
-        data = "N/A"
+        data ="N/A"
       elif data == "E":
         return
 
@@ -77,20 +78,24 @@ class WeatherScraper(HTMLParser):
           self.weather[self.date] = self.daily_temps
           self.daily_temps = dict()
 
+  def return_dict(self):
+    temp_weather = self.weather
+    self.weather = dict()
+    return temp_weather
+
   def return_dict_as_formatted_list(self):
     """ Return the dictionary as a formatted list of key values pairs """
     for keys,values in self.weather.items():
       print(keys,values)
 
+  def get_url(self, year, month):
+    urlstring = "https://climate.weather.gc.ca/climate_data/daily_data_e.html?StationID=27174&timeframe=2&StartYear=1840&EndYear=2018&Day=1&"
+    year_url = "Year=" + str(year)
+    month_url = "&Month=" + str(month)
+    #print(year_url,month_url)
+    return urlstring + year_url + month_url
 
 if __name__ == "__main__":
-  myparser = WeatherScraper()
-
-  with urllib.request.urlopen('https://climate.weather.gc.ca/climate_data/daily_data_e.html?StationID=27174&timeframe=2&StartYear=1840&EndYear=2018&Day=1&Year=1996&Month=10#') as response:
-    html = str(response.read())
-
-  myparser.feed(html)
-  print(myparser.return_dict_as_formatted_list())
 
 # https://climate.weather.gc.ca/climate_data/daily_data_e.html?StationID=27174&timeframe=2&StartYear=1840&EndYear=2018&Day=1&Year=1996&Month=10#
 # https://climate.weather.gc.ca/climate_data/daily_data_e.html?StationID=27174&timeframe=2&StartYear=1840&EndYear=2018&Day=1&Year=2020&Month=11#
