@@ -16,6 +16,7 @@ class WeatherScraper(HTMLParser):
   """
 
   def __init__(self):
+    """ Initializes variables,lists and dictionaries needed for scraping. """
     HTMLParser.__init__(self)
     self.stack = list()
     self.daily_temps = dict()
@@ -25,11 +26,15 @@ class WeatherScraper(HTMLParser):
     self.date = ""
 
   def handle_starttag(self, tag, attrs):
+    """ Builds list stack for every tag element we enter into.
+        Increases column count to check what column we are inside. """
     self.stack.append(tag)
     if tag == "td":
       self.count_col += 1
 
   def handle_endtag(self, tag):
+    """ Removes latest tag from the list stack when we exit out of a tag element and
+        Reset the column and item count on exit. """
     if tag == "tr":
       self.count_col = 0
       self.count_item = 0
@@ -39,6 +44,12 @@ class WeatherScraper(HTMLParser):
         break
 
   def handle_data(self, data):
+    """ Verify we are accessing the right data by way of tag sequence from built up stack.
+        Collect the Date from the table header and the daily temperatures from the table data.
+        Handle data that are not proper values, such as "E" and "M"
+        Insert value into proper dictionary key dependant on the column we are accessing (column count).
+        Append daily temperature dictionary into weather dictionary by way of the Date key.
+    """
     if self.stack[-5:] == ["tbody", "tr", "th", "abbr", "a"] or self.stack[-4:] == ["tbody", "tr", "th", "abbr"]:
       if data.isdigit():
         self.date = data
@@ -67,14 +78,19 @@ class WeatherScraper(HTMLParser):
           self.daily_temps = dict()
 
   def return_dict_as_formatted_list(self):
+    """ Return the dictionary as a formatted list of key values pairs """
     for keys,values in self.weather.items():
       print(keys,values)
 
 
-myparser = WeatherScraper()
+if __name__ == "__main__":
+  myparser = WeatherScraper()
 
-with urllib.request.urlopen('https://climate.weather.gc.ca/climate_data/daily_data_e.html?StationID=27174&timeframe=2&StartYear=1840&EndYear=2018&Day=1&Year=2004&Month=10') as response:
-  html = str(response.read())
+  with urllib.request.urlopen('https://climate.weather.gc.ca/climate_data/daily_data_e.html?StationID=27174&timeframe=2&StartYear=1840&EndYear=2018&Day=1&Year=1996&Month=10#') as response:
+    html = str(response.read())
 
-myparser.feed(html)
-print(myparser.return_dict_as_formatted_list())
+  myparser.feed(html)
+  print(myparser.return_dict_as_formatted_list())
+
+# https://climate.weather.gc.ca/climate_data/daily_data_e.html?StationID=27174&timeframe=2&StartYear=1840&EndYear=2018&Day=1&Year=1996&Month=10#
+# https://climate.weather.gc.ca/climate_data/daily_data_e.html?StationID=27174&timeframe=2&StartYear=1840&EndYear=2018&Day=1&Year=2020&Month=11#

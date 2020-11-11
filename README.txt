@@ -10,6 +10,7 @@ Develop an application with the following features:
 2. Use the Python HTMLParser class to scrape Winnipeg weather data (min, max & mean temperatures) from the
     Environment Canada website, from the current date, as far back in time as is available.
   Link: https://climate.weather.gc.ca/climate_data/daily_data_e.html?StationID=27174&timeframe=2&StartYear=1840&EndYear=2018&Day=1&Year=1900&Month=5
+
 3. Your code must automatically detect when no more weather data is available for scraping. In other words, you
     are not allowed to hard code the last available date into your program. You are also not allowed to fetch
     the last date from any dropdown menus on the site.
