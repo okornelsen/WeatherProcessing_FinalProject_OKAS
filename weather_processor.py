@@ -16,24 +16,37 @@ class WeatherProcessor:
   """
   This class manages the user interaction to generate plots and update the data.
   """
+
   def __init__(self):
     self.db = DBOperations()
     self.ws = WeatherScraper()
     self.pl = PlotOperations()
 
   def download_data(self):
+    """ Clears the database, reinitializes it, then downloads all the data to it. """
+
     self.db.purge_data()
     self.db.initialize_db()
     self.collect_data()
 
   def update_data(self):
+    """ Ensures the database exists then downloads all
+        the data up to the most recent date in the database. """
+
     self.db.initialize_db()
     self.collect_data()
 
-  def get_box_plot(self, user_input):
-    pass
+  def get_box_plot(self):
+    """ Fetches data within the users inputted range then
+        generates a box plot for the mean temperatures of each month. """
+
+    weather = self.db.fetch_data(1996,2021,False)
+    self.pl.generate_box_plot(weather, 1996, 2020)
 
   def get_line_plot(self, user_input):
+    """ User inputs the month and year of the data to be fetched
+        then generates a line plot for the daily mean temperatures of that month. """
+
     weather = self.db.fetch_data(2020,11,True)
     self.pl.generate_line_plot(weather, 2020, 11)
 
@@ -89,4 +102,3 @@ class WeatherProcessor:
 
       month = 12
       year -= 1
-
