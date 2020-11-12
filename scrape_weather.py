@@ -29,6 +29,7 @@ class WeatherScraper(HTMLParser):
   def handle_starttag(self, tag, attrs):
     """ Builds list stack for every tag element we enter into.
         Increases column count to check what column we are inside. """
+
     self.stack.append(tag)
     if tag == "td":
       self.count_col += 1
@@ -36,10 +37,14 @@ class WeatherScraper(HTMLParser):
   def handle_endtag(self, tag):
     """ Removes latest tag from the list stack when we exit out of a tag element and
         Reset the column and item count on exit. """
+
     if tag == "tr":
       self.count_col = 0
       self.count_item = 0
+
     while self.stack:
+      """ Loops through and pop off tag until stack is empty and no tags remain unhandled. """
+
       item = self.stack.pop()
       if item == tag:
         break
@@ -49,8 +54,8 @@ class WeatherScraper(HTMLParser):
         Collect the Date from the table header and the daily temperatures from the table data.
         Handle data that are not proper values, such as "E" and "M"
         Insert value into proper dictionary key dependant on the column we are accessing (column count).
-        Append daily temperature dictionary into weather dictionary by way of the Date key.
-    """
+        Append daily temperature dictionary into weather dictionary by way of the Date key. """
+
     if self.stack[-5:] == ["tbody", "tr", "th", "abbr", "a"] or self.stack[-4:] == ["tbody", "tr", "th", "abbr"]:
       if data.isdigit():
         self.date = data
@@ -79,18 +84,23 @@ class WeatherScraper(HTMLParser):
           self.daily_temps = dict()
 
   def return_dict(self):
+    """ Returns the weather as a dictionary. """
+
     temp_weather = self.weather
     self.weather = dict()
     return temp_weather
 
   def return_dict_as_formatted_list(self):
-    """ Return the dictionary as a formatted list of key values pairs """
+    """ Return the dictionary as a formatted list of key values pairs. """
+
     for keys,values in self.weather.items():
+      """ Iterates through and prints out the keys and values in weather. """
       print(keys,values)
 
   def get_url(self, year, month):
+    """ Retrieves the url used in db operations to collect data. """
+
     urlstring = "https://climate.weather.gc.ca/climate_data/daily_data_e.html?StationID=27174&timeframe=2&StartYear=1840&EndYear=2018&Day=1&"
     year_url = "Year=" + str(year)
     month_url = "&Month=" + str(month)
-    #print(year_url,month_url)
     return urlstring + year_url + month_url
