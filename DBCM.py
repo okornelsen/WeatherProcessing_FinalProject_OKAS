@@ -14,10 +14,10 @@ class DBCM:
   """
 
   def __init__(self, _db):
-    self.db = _db
+    self.conn = sqlite3.connect(_db)
+    self.conn.row_factory = sqlite3.Row
 
   def __enter__(self):
-    self.conn = sqlite3.connect(self.db)
     self.cursor = self.conn.cursor()
     return self.cursor
 

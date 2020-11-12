@@ -18,8 +18,19 @@ class DBOperations:
   This class manages all the db components needed for the weather data.
   """
 
-  def fetch_data(self, data_to_plot):
-    pass
+  """"select * from wpg_weather where date between " + str(start) + " and " + str(year2)"""
+
+  def fetch_data(self, start, end, is_month):
+    with DBCM("wpg_weather.sqlite") as cursor:
+      if is_month:
+        start_date = str(start) + "-" + str(end) + "-" + "01"
+        end_date = str(start) + "-" + str(end) + "-" + "31"
+      else:
+        start_date = str(start)
+        end_date = str(end)
+
+      cursor.execute("select * from wpg_weather where date between '" + start_date + "' and '" + end_date + "'")
+      return [dict(row) for row in cursor.fetchall()]
 
   def collect_data(self):
     myparser = WeatherScraper()
@@ -64,7 +75,6 @@ class DBOperations:
       for key, value in temps.items():
         set_data.append(value)
 
-      print(set_data)
       with DBCM("wpg_weather.sqlite") as cursor:
         cursor.execute(sql, set_data)
 
@@ -81,9 +91,3 @@ class DBOperations:
   def purge_data(self):
     with DBCM("wpg_weather.sqlite") as cursor:
           cursor.execute("drop table wpg_weather")
-
-if __name__ = "__main__"
-  weather = DBOperations()
-  weather.purge_data()
-  weather.initialize_db()
-  weather.collect_data()
