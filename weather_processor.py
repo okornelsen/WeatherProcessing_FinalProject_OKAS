@@ -6,19 +6,86 @@ ADEV-3005 Programming in Python
 This module handles the user to download a full set of weather data, or to update it from a menu of choices.
 '''
 
+from db_operations import DBOperations
+from scrape_weather import WeatherScraper
+import urllib.request
+from datetime import date
+
 class WeatherProcessor:
   """
   This class manages the user interaction to generate plots and update the data.
   """
+  def __init__(self):
+    self.db = DBOperations()
+    self.ws = WeatherScraper()
 
   def download_data(self):
-    pass
+    self.db.purge_data()
+    self.db.initialize_db()
+    self.collect_data()
 
   def update_data(self):
-    pass
+    self.collect_data()
 
   def get_box_plot(self, user_input):
     pass
 
   def get_line_plot(self, user_input):
     pass
+
+  def collect_data(self):
+    """ This method collects the data by looping through and prepping for save,
+        Get the current date and break it down into variables,
+        Query db for the latest recorded data by date,
+        Call the scraper class to collect necessary data,
+        Stop collecting after duplicates are found. """
+
+    today = date.today()
+    year = int(today.strftime("%Y"))
+    month = int(today.strftime("%m"))
+    year_dict = dict()
+    duplicate = False
+    recent_date = "0-0-0"
+
+    dates = self.db.fetch_last()
+    if len(dates) > 0:
+        recent_date = dates[0]["date"]
+
+    while not duplicate:
+      """ Iterates through each year starting with the
+          latest and working backwards until duplicate data is found. """
+
+      month_dict = dict()
+
+      while month > 0:
+        """ Iterate through each month starting with the latest
+            and working backwards until duplicate data is found. """
+
+        url = self.ws.get_url(year, month)
+
+        with urllib.request.urlopen(url) as response:
+          html = str(response.read())
+
+        self.ws.feed(html)
+        month_dict[month] = self.ws.return_dict()
+
+        if month + 1 in month_dict.keys() and month_dict[month] == month_dict[month + 1]:
+          """Checks if month is the same as the prior month. Used for download_data """
+          month_dict.popitem()
+          duplicate = True
+          break
+
+        if recent_date[-2:] in month_dict[month].keys() and str(year) + "-" + str(month) == recent_date[:-3]:
+          """ Checks if day is the same as the prior day. Used for update_data """
+          duplicate = True
+          break
+
+        self.db.save_data(month_dict[month], month, year)
+        month -= 1
+
+      month = 12
+      year -= 1
+
+
+weather = WeatherProcessor()
+weather.update_data()

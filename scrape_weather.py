@@ -6,10 +6,8 @@ ADEV-3005 Programming in Python
 This Module uses the Python HTMLParser class to scrape Winnipeg weather data (min, max & mean temperatures)
 from the Environment Canada website, from the current date, as far back in time as is available.
 '''
-import urllib.request
+
 from html.parser import HTMLParser
-from datetime import date
-import pprint
 
 class WeatherScraper(HTMLParser):
   """
