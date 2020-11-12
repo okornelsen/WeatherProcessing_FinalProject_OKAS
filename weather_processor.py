@@ -8,6 +8,7 @@ This module handles the user to download a full set of weather data, or to updat
 
 from db_operations import DBOperations
 from scrape_weather import WeatherScraper
+from plot_operations import PlotOperations
 import urllib.request
 from datetime import date
 
@@ -18,6 +19,7 @@ class WeatherProcessor:
   def __init__(self):
     self.db = DBOperations()
     self.ws = WeatherScraper()
+    self.pl = PlotOperations()
 
   def download_data(self):
     self.db.purge_data()
@@ -25,13 +27,15 @@ class WeatherProcessor:
     self.collect_data()
 
   def update_data(self):
+    self.db.initialize_db()
     self.collect_data()
 
   def get_box_plot(self, user_input):
     pass
 
   def get_line_plot(self, user_input):
-    pass
+    weather = self.db.fetch_data(2020,11,True)
+    self.pl.generate_line_plot(weather, 2020, 11)
 
   def collect_data(self):
     """ This method collects the data by looping through and prepping for save,
@@ -86,6 +90,3 @@ class WeatherProcessor:
       month = 12
       year -= 1
 
-
-weather = WeatherProcessor()
-weather.update_data()

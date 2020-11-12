@@ -6,7 +6,7 @@ ADEV-3005 Programming in Python
 This module uses sqlite3 to store the weather data in an SQLite database.
 '''
 
-from dbcm import DBCM
+from DBCM import DBCM
 
 class DBOperations:
   """

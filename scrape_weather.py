@@ -61,7 +61,7 @@ class WeatherScraper(HTMLParser):
     if self.stack[-3:] == ["tbody", "tr", "td"] or self.stack[-2:] == ["td", "a"] and self.count_col <= 3:
 
       if data == "M" or data == "\xa0":
-        data ="N/A"
+        data = "N/A"
       elif data == "E":
         return
 
