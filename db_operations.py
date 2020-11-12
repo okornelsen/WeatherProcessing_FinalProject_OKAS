@@ -18,8 +18,6 @@ class DBOperations:
   This class manages all the db components needed for the weather data.
   """
 
-  """"select * from wpg_weather where date between " + str(start) + " and " + str(year2)"""
-
   def fetch_data(self, start, end, is_month):
     with DBCM("wpg_weather.sqlite") as cursor:
       if is_month:
@@ -39,6 +37,13 @@ class DBOperations:
     month = int(today.strftime("%m"))
     year_dict = dict()
     duplicate = False
+    recent_date = "0-0-0"
+
+    with DBCM("wpg_weather.sqlite") as cursor:
+      cursor.execute("select date from wpg_weather order by DATE(date) desc limit 1")
+      dates =[dict(row) for row in cursor.fetchall()]
+      if len(dates) > 0:
+        recent_date = dates[0]["date"]
 
     while not duplicate:
       month_dict = dict()
@@ -54,6 +59,10 @@ class DBOperations:
 
         if month + 1 in month_dict.keys() and month_dict[month] == month_dict[month + 1]:
           month_dict.popitem()
+          duplicate = True
+          break
+
+        if recent_date[-2:] in month_dict[month].keys() and str(year) + "-" + str(month) == recent_date[:-3]:
           duplicate = True
           break
 
