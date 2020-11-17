@@ -61,20 +61,20 @@ class WeatherProcessor:
     year = int(today.strftime("%Y"))
     month = int(today.strftime("%m"))
     year_dict = dict()
-    duplicate = False
-    recent_date = "0-0-0"
+    duplicate_month,duplicate_day = False, False
+    recent_date = ""
 
     dates = self.db.fetch_last()
     if len(dates) > 0:
         recent_date = dates[0]["date"]
 
-    while not duplicate:
+    while not duplicate_month and not duplicate_day:
       """ Iterates through each year starting with the
           latest and working backwards until duplicate data is found. """
 
       month_dict = dict()
 
-      while month > 0:
+      while not duplicate_day and month > 0:
         """ Iterate through each month starting with the latest
             and working backwards until duplicate data is found. """
 
@@ -89,14 +89,20 @@ class WeatherProcessor:
         if month + 1 in month_dict.keys() and month_dict[month] == month_dict[month + 1]:
           """Checks if month is the same as the prior month. Used for download_data """
           month_dict.popitem()
-          duplicate = True
+          duplicate_month = True
           break
 
-        if recent_date[-2:] in month_dict[month].keys() and f"{str(year)}-{str(month)}" == recent_date[:-3]:
-          """ Checks if day is the same as the prior day. Used for update_data """
-          duplicate = True
-          break
+        if recent_date != "":
+          temp_dict = {}
+          for key,value in reversed(month_dict[month].items()):
+            if key == recent_date[-2:]:
+              duplicate_day = True
 
+              break
+            temp_dict[key] = value
+
+          month_dict[month] = temp_dict
+          print(month_dict[month])
         self.db.save_data(month_dict[month], month, year)
         month -= 1
 
@@ -104,4 +110,5 @@ class WeatherProcessor:
       year -= 1
 
 wp = WeatherProcessor()
+#wp.update_data()
 wp.download_data()
