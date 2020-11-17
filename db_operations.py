@@ -6,7 +6,7 @@ ADEV-3005 Programming in Python
 This module uses sqlite3 to store the weather data in an SQLite database.
 '''
 
-from DBCM import DBCM
+from dbcm import DBCM
 
 class DBOperations:
   """
@@ -18,13 +18,13 @@ class DBOperations:
 
     with DBCM("wpg_weather.sqlite") as cursor:
       if is_month:
-        start_date = str(start) + "-" + str(end) + "-" + "01"
-        end_date = str(start) + "-" + str(end) + "-" + "31"
+        start_date = f"{str(start)}-{str(end)}-01"
+        end_date = f"{str(start)}-{str(end)}-31"
       else:
         start_date = str(start)
         end_date = str(end)
 
-      cursor.execute("select * from wpg_weather where date between '" + start_date + "' and '" + end_date + "'")
+      cursor.execute(f"select date, mean_temp from wpg_weather where date between '{start_date}' and '{end_date}'")
       return [dict(row) for row in cursor.fetchall()]
 
   def save_data(self, data, month, year):
@@ -37,7 +37,7 @@ class DBOperations:
       """ Iterates through each day in data adding that days data to a list. """
 
       set_data = list()
-      set_data.append(str(year) + "-" + str(month) + "-" + str(day))
+      set_data.append(f"{str(year)}-{str(month)}-{str(day)}")
       set_data.append(location)
 
       for key, value in temps.items():

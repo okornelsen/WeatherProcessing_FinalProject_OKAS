@@ -24,7 +24,7 @@ class PlotOperations:
     if len(weather) > 0:
 
       fig, ax = plt.subplots()
-      ax.set_title(str(start_year) + "-" + str(end_year))
+      ax.set_title(f"{str(start_year)}-{str(end_year)}")
       plt.ylabel('Mean Temperature')
       plt.xlabel('Month')
 
@@ -62,7 +62,7 @@ class PlotOperations:
       plt.ylabel('Mean Temperature')
       plt.xlabel('Day')
 
-      date_as_date = datetime.strptime(str(year) + str(month), "%Y%m")
+      date_as_date = datetime.strptime(f"{str(year)}{str(month)}", "%Y%m")
       ax.set_title(date_as_date.strftime("%B, %Y"))
 
       mean_temps = []

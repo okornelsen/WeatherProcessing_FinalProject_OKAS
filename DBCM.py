@@ -13,15 +13,16 @@ class DBCM:
   This class manages all components to using a database cursor.
   """
 
-  def __init__(self, _db):
+  def __init__(self, database):
     """ Initializes the database connection. """
 
-    self.conn = sqlite3.connect(_db)
-    self.conn.row_factory = sqlite3.Row
+    self._db = database
 
   def __enter__(self):
     """ Establishes cursor connection to be used in db_operations. """
 
+    self.conn = sqlite3.connect(self._db)
+    self.conn.row_factory = sqlite3.Row
     self.cursor = self.conn.cursor()
     return self.cursor
 

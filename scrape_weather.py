@@ -99,6 +99,6 @@ class WeatherScraper(HTMLParser):
     """ Retrieves the url used in db operations to collect data. """
 
     urlstring = "https://climate.weather.gc.ca/climate_data/daily_data_e.html?StationID=27174&timeframe=2&StartYear=1840&EndYear=2018&Day=1&"
-    year_url = "Year=" + str(year)
-    month_url = "&Month=" + str(month)
+    year_url = f"Year={str(year)}"
+    month_url = f"&Month={str(month)}"
     return urlstring + year_url + month_url

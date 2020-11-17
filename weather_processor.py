@@ -43,7 +43,7 @@ class WeatherProcessor:
     weather = self.db.fetch_data(1996,2021,False)
     self.pl.generate_box_plot(weather, 1996, 2020)
 
-  def get_line_plot(self, user_input):
+  def get_line_plot(self):
     """ User inputs the month and year of the data to be fetched
         then generates a line plot for the daily mean temperatures of that month. """
 
@@ -92,7 +92,7 @@ class WeatherProcessor:
           duplicate = True
           break
 
-        if recent_date[-2:] in month_dict[month].keys() and str(year) + "-" + str(month) == recent_date[:-3]:
+        if recent_date[-2:] in month_dict[month].keys() and f"{str(year)}-{str(month)}" == recent_date[:-3]:
           """ Checks if day is the same as the prior day. Used for update_data """
           duplicate = True
           break
@@ -102,3 +102,6 @@ class WeatherProcessor:
 
       month = 12
       year -= 1
+
+wp = WeatherProcessor()
+wp.download_data()
