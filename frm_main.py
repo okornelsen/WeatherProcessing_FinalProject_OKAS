@@ -9,7 +9,6 @@
 
 import wx
 import wx.xrc
-from weather_processor import WeatherProcessor
 
 ###########################################################################
 ## Class frmMain
@@ -18,7 +17,7 @@ from weather_processor import WeatherProcessor
 class frmMain ( wx.Frame ):
 
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = wx.EmptyString, pos = wx.DefaultPosition, size = wx.Size( 684,392 ), style = wx.DEFAULT_FRAME_STYLE|wx.STAY_ON_TOP|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = wx.EmptyString, pos = wx.DefaultPosition, size = wx.Size( 684,392 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
 
 		self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
 		self.SetBackgroundColour( wx.Colour( 139, 199, 194 ) )
@@ -113,7 +112,7 @@ class frmMain ( wx.Frame ):
 		self.lblLineMonth.Wrap( -1 )
 		gSizer241.Add( self.lblLineMonth, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-		cboLineMonthChoices = [ u"1", u"2", u"3", u"4", u"5", u"6", u"7", u"8", u"9", u"10", u"11", u"12" ]
+		cboLineMonthChoices = []
 		self.cboLineMonth = wx.Choice( self, wx.ID_ANY, wx.DefaultPosition, wx.Size( 110,-1 ), cboLineMonthChoices, 0 )
 		self.cboLineMonth.SetSelection( 0 )
 		gSizer241.Add( self.cboLineMonth, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
@@ -234,18 +233,27 @@ class frmMain ( wx.Frame ):
 
 		# Connect Events
 		self.btnBox.Bind( wx.EVT_BUTTON, self.btnBoxOnButtonClick )
+		self.cboBoxStart.Bind( wx.EVT_CHOICE, self.cboBoxStartOnChoice )
 		self.btnLine.Bind( wx.EVT_BUTTON, self.btnLineOnButtonClick )
+		self.cboLineYear.Bind( wx.EVT_CHOICE, self.cboLineYearOnChoice )
 		self.btnDownload.Bind( wx.EVT_BUTTON, self.btnDownloadOnButtonClick )
 		self.btnUpdate.Bind( wx.EVT_BUTTON, self.btnUpdateOnButtonClick )
 
 	def __del__( self ):
 		pass
 
+
 	# Virtual event handlers, overide them in your derived class
 	def btnBoxOnButtonClick( self, event ):
 		event.Skip()
 
+	def cboBoxStartOnChoice( self, event ):
+		event.Skip()
+
 	def btnLineOnButtonClick( self, event ):
+		event.Skip()
+
+	def cboLineYearOnChoice( self, event ):
 		event.Skip()
 
 	def btnDownloadOnButtonClick( self, event ):
@@ -253,3 +261,5 @@ class frmMain ( wx.Frame ):
 
 	def btnUpdateOnButtonClick( self, event ):
 		event.Skip()
+
+

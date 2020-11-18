@@ -11,6 +11,7 @@ For the line plot the user specifies the year and month to be used.
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from datetime import datetime
+import locale
 from db_operations import DBOperations
 
 class PlotOperations:
@@ -24,7 +25,8 @@ class PlotOperations:
     if len(weather) > 0:
 
       fig, ax = plt.subplots()
-      ax.set_title(f"{str(start_year)}-{str(end_year)}")
+      fig.canvas.set_window_title(f"Weather Processor: {start_year}-{end_year}")
+      ax.set_title(f"{start_year}-{end_year}")
       plt.ylabel('Mean Temperature')
       plt.xlabel('Month')
 
@@ -57,12 +59,15 @@ class PlotOperations:
 
     if len(weather) > 0:
       day_format = mdates.DateFormatter('%d')
+      locale.setlocale(locale.LC_ALL, 'en-CA.utf8')
+      date_as_date = datetime.strptime(year+ "-" + month, "%Y-%m")
+
       fig, ax = plt.subplots()
+      fig.canvas.set_window_title(f"Weather Processor: {date_as_date.strftime('%B, %Y')}")
       ax.xaxis.set_major_formatter(day_format)
       plt.ylabel('Mean Temperature')
       plt.xlabel('Day')
 
-      date_as_date = datetime.strptime(f"{str(year)}{str(month)}", "%Y%m")
       ax.set_title(date_as_date.strftime("%B, %Y"))
 
       mean_temps = []

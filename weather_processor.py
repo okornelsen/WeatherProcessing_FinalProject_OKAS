@@ -22,6 +22,7 @@ class WeatherProcessor:
     self.ws = WeatherScraper()
     self.pl = PlotOperations()
     self.last_updated = self.db.fetch_last()[0]["date"] if self.db.table_init() else ""
+    self.first_updated = self.db.fetch_first()[0]["date"] if self.db.table_init() else ""
     self.last_downloaded = ""
 
 
@@ -40,19 +41,19 @@ class WeatherProcessor:
     self.collect_data()
     self.last_updated = self.db.fetch_last()[0]["date"]
 
-  def get_box_plot(self):
+  def get_box_plot(self, start_year, end_year):
     """ Fetches data within the users inputted range then
         generates a box plot for the mean temperatures of each month. """
 
-    weather = self.db.fetch_data(1996,2021,False)
-    self.pl.generate_box_plot(weather, 1996, 2020)
+    weather = self.db.fetch_data(start_year,int(end_year) + 1,False)
+    self.pl.generate_box_plot(weather, start_year, end_year)
 
-  def get_line_plot(self):
+  def get_line_plot(self, year, month):
     """ User inputs the month and year of the data to be fetched
         then generates a line plot for the daily mean temperatures of that month. """
 
-    weather = self.db.fetch_data(2020,11,True)
-    self.pl.generate_line_plot(weather, 2020, 11)
+    weather = self.db.fetch_data(year,month,True)
+    self.pl.generate_line_plot(weather, year, month)
 
   def collect_data(self):
     """ This method collects the data by looping through and prepping for save,
@@ -100,7 +101,6 @@ class WeatherProcessor:
           temp_dict = {}
           for key,value in reversed(month_dict[month].items()):
             check_date = f"{year}-{month:02d}-{key}"
-            print("Check:", check_date)
             if check_date == recent_date:
               duplicate_day = True
 
@@ -110,7 +110,33 @@ class WeatherProcessor:
           month_dict[month] = temp_dict
         self.db.save_data(month_dict[month], month, year)
         self.last_downloaded = f"{year}-{month}"
+        print("Downloading: ", self.last_downloaded)
         month -= 1
 
       month = 12
       year -= 1
+
+  def get_years_for_dropdown(self, min_year):
+    if min_year == "":
+      firstyear = int(self.first_updated[:4])
+    else:
+      firstyear = int(min_year)
+
+    lastyear = int(self.last_updated[:4])
+    years = []
+    while firstyear <= lastyear:
+      years.append(str(firstyear))
+      firstyear += 1
+    return years
+
+  def get_months_for_dropdown(self, year):
+    if year == "":
+      year = int(self.first_updated[:4])
+
+    data = self.db.fetch_months(year)
+    months = []
+
+    for item in data:
+      for value in item.values():
+        months.append(str(value[-2:]))
+    return months[::-1]
