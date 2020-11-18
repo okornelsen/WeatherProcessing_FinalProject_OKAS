@@ -37,7 +37,7 @@ class DBOperations:
       """ Iterates through each day in data adding that days data to a list. """
 
       set_data = list()
-      set_data.append(f"{str(year)}-{str(month)}-{str(day)}")
+      set_data.append(f"{str(year)}-{month:02d}-{str(day)}")
       set_data.append(location)
 
       for key, value in temps.items():
@@ -62,8 +62,8 @@ class DBOperations:
 
   def purge_data(self):
     """ This method is used to purge the table in the database """
-
-    with DBCM("wpg_weather.sqlite") as cursor:
+    if self.table_init():
+      with DBCM("wpg_weather.sqlite") as cursor:
           cursor.execute("drop table wpg_weather")
 
   def fetch_last(self):
@@ -71,3 +71,10 @@ class DBOperations:
       cursor.execute("select date from wpg_weather order by DATE(date) desc limit 1")
       return [dict(row) for row in cursor.fetchall()]
 
+  def table_init(self):
+    with DBCM("wpg_weather.sqlite") as cursor:
+      cursor.execute("select COUNT(*) from sqlite_master where name = 'wpg_weather'")
+      if cursor.fetchone()[0] == 1:
+        return True
+      else:
+        return False

@@ -21,6 +21,9 @@ class WeatherProcessor:
     self.db = DBOperations()
     self.ws = WeatherScraper()
     self.pl = PlotOperations()
+    self.last_updated = self.db.fetch_last()[0]["date"] if self.db.table_init() else ""
+    self.last_downloaded = ""
+
 
   def download_data(self):
     """ Clears the database, reinitializes it, then downloads all the data to it. """
@@ -35,6 +38,7 @@ class WeatherProcessor:
 
     self.db.initialize_db()
     self.collect_data()
+    self.last_updated = self.db.fetch_last()[0]["date"]
 
   def get_box_plot(self):
     """ Fetches data within the users inputted range then
@@ -95,20 +99,18 @@ class WeatherProcessor:
         if recent_date != "":
           temp_dict = {}
           for key,value in reversed(month_dict[month].items()):
-            if key == recent_date[-2:]:
+            check_date = f"{year}-{month:02d}-{key}"
+            print("Check:", check_date)
+            if check_date == recent_date:
               duplicate_day = True
 
               break
             temp_dict[key] = value
 
           month_dict[month] = temp_dict
-          print(month_dict[month])
         self.db.save_data(month_dict[month], month, year)
+        self.last_downloaded = f"{year}-{month}"
         month -= 1
 
       month = 12
       year -= 1
-
-wp = WeatherProcessor()
-#wp.update_data()
-wp.download_data()
