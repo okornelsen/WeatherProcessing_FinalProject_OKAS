@@ -26,8 +26,8 @@ class WeatherProcessor:
       self.db = DBOperations()
       self.ws = WeatherScraper()
       self.pl = PlotOperations()
-      self.last_updated = self.db.fetch_last()[0]["date"] if self.db.is_table_exist() else ""
-      self.first_updated = self.db.fetch_first()[0]["date"] if self.db.is_table_exist() else ""
+      self.last_updated = self.db.fetch_last()[0]["sample_date"] if self.db.is_table_exist() else ""
+      self.first_updated = self.db.fetch_first()[0]["sample_date"] if self.db.is_table_exist() else ""
 
     except Exception as e:
       logging.error(f"weatherprocessor:__init__, {e}")
@@ -48,7 +48,7 @@ class WeatherProcessor:
     try:
       self.db.initialize_db()
       self.collect_data()
-      self.last_updated = self.db.fetch_last()[0]["date"]
+      self.last_updated = self.db.fetch_last()[0]["sample_date"]
 
     except Exception as e:
       logging.error(f"weatherprocessor:update_data, {e}")
@@ -89,7 +89,7 @@ class WeatherProcessor:
 
       dates = self.db.fetch_last()
       if len(dates) > 0:
-          recent_date = dates[0]["date"]
+          recent_date = dates[0]["sample_date"]
 
       while not duplicate_month and not duplicate_day:
         """ Iterates through each year starting with the
@@ -155,8 +155,8 @@ class WeatherProcessor:
 
       if self.db.is_table_exist():
 
-        self.last_updated = self.db.fetch_last()[0]["date"] if self.db.is_table_exist() else ""
-        self.first_updated = self.db.fetch_first()[0]["date"] if self.db.is_table_exist() else ""
+        self.last_updated = self.db.fetch_last()[0]["sample_date"] if self.db.is_table_exist() else ""
+        self.first_updated = self.db.fetch_first()[0]["sample_date"] if self.db.is_table_exist() else ""
 
         if min_year == "":
           firstyear = int(self.first_updated[:4])
@@ -187,7 +187,7 @@ class WeatherProcessor:
 
       if self.db.is_table_exist():
 
-        self.first_updated = self.db.fetch_first()[0]["date"] if self.db.is_table_exist() else ""
+        self.first_updated = self.db.fetch_first()[0]["sample_date"] if self.db.is_table_exist() else ""
 
         if year == "":
           year = int(self.first_updated[:4])

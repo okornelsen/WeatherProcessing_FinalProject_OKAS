@@ -36,20 +36,20 @@ class PlotOperations:
         for row in weather:
           """ Iterates through months in year to append into lists used to plot with. """
           try:
-            if row["mean_temp"] != "N/A":
-              month = int(row['date'][5:7].replace("-",""))
-              if month == 1: january.append(row["mean_temp"])
-              elif month == 2: february.append(row["mean_temp"])
-              elif month == 3: march.append(row["mean_temp"])
-              elif month == 4: april.append(row["mean_temp"])
-              elif month == 5: may.append(row["mean_temp"])
-              elif month == 6: june.append(row["mean_temp"])
-              elif month == 7: july.append(row["mean_temp"])
-              elif month == 8: august.append(row["mean_temp"])
-              elif month == 9: september.append(row["mean_temp"])
-              elif month == 10: october.append(row["mean_temp"])
-              elif month == 11: november.append(row["mean_temp"])
-              elif month == 12: december.append(row["mean_temp"])
+            if row["avg_temp"] != "N/A":
+              month = int(row["sample_date"][5:7].replace("-",""))
+              if month == 1: january.append(row["avg_temp"])
+              elif month == 2: february.append(row["avg_temp"])
+              elif month == 3: march.append(row["avg_temp"])
+              elif month == 4: april.append(row["avg_temp"])
+              elif month == 5: may.append(row["avg_temp"])
+              elif month == 6: june.append(row["avg_temp"])
+              elif month == 7: july.append(row["avg_temp"])
+              elif month == 8: august.append(row["avg_temp"])
+              elif month == 9: september.append(row["avg_temp"])
+              elif month == 10: october.append(row["avg_temp"])
+              elif month == 11: november.append(row["avg_temp"])
+              elif month == 12: december.append(row["avg_temp"])
 
           except Exception as e:
             logging.error(f"plotoperations:generate_box_plot:loop, {e}")
@@ -84,8 +84,8 @@ class PlotOperations:
         for row in weather:
           """ Iterates through days in month and appends into lists used to plot with. """
           try:
-            mean_temp = row["mean_temp"]
-            dates.append(row["date"])
+            mean_temp = row["avg_temp"]
+            dates.append(row["sample_date"])
 
             if mean_temp != "N/A":
               mean_temps.append(mean_temp)
