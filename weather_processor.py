@@ -23,7 +23,7 @@ class WeatherProcessor:
   def __init__(self):
     """ Initialize classes and variables for db operations, web scraping, plot operations and UI configuration """
     try:
-      self.db = DBOperations()
+      self.db = DBOperations("weather.sqlite")
       self.ws = WeatherScraper()
       self.pl = PlotOperations()
       self.last_updated = self.db.fetch_last()[0]["sample_date"] if self.db.is_table_exist() else ""

@@ -10,15 +10,18 @@ from dbcm import DBCM
 from pubsub import pub
 import logging
 
-class DBOperations:
+class DBOperations():
   """
   This class manages all the db components needed for the weather data.
   """
 
+  def __init__(self, _database):
+    self.database = _database
+
   def fetch_data(self, start, end, is_month):
     """ This function fetchs the range of data from the db as requested by the user. """
     try:
-      with DBCM("samples.sqlite") as cursor:
+      with DBCM(self.database) as cursor:
         if is_month:
           start_date = f"{str(start)}-{str(end)}-01"
           end_date = f"{str(start)}-{str(end)}-31"
@@ -53,7 +56,7 @@ class DBOperations:
             except Exception as e:
               logging.error(f"dboperations:fetch_data:loop:2, {e}")
 
-          with DBCM("samples.sqlite") as cursor:
+          with DBCM(self.database) as cursor:
             cursor.execute(sql, set_data)
 
         except Exception as e:
@@ -65,7 +68,7 @@ class DBOperations:
   def initialize_db(self):
     """ This method is used to initialize the db """
     try:
-      with DBCM("samples.sqlite") as cursor:
+      with DBCM(self.database) as cursor:
         cursor.execute("""create table if not exists samples
                     (id integer primary key autoincrement not null,
                     sample_date text not null,
@@ -81,7 +84,7 @@ class DBOperations:
     """ This method is used to purge the table in the database """
     try:
       if self.is_table_exist():
-        with DBCM("samples.sqlite") as cursor:
+        with DBCM(self.database) as cursor:
             cursor.execute("drop table samples")
 
     except Exception as e:
@@ -90,7 +93,7 @@ class DBOperations:
   def fetch_last(self):
     """ This method is used to get the most recent date from the db """
     try:
-      with DBCM("samples.sqlite") as cursor:
+      with DBCM(self.database) as cursor:
         cursor.execute("select sample_date from samples order by DATE(sample_date) desc limit 1")
         return [dict(row) for row in cursor.fetchall()]
 
@@ -100,7 +103,7 @@ class DBOperations:
   def fetch_first(self):
     """ This method is used to get the least recent date from the db """
     try:
-      with DBCM("samples.sqlite") as cursor:
+      with DBCM(self.database) as cursor:
         cursor.execute("select sample_date from samples order by DATE(sample_date) asc limit 1")
         return [dict(row) for row in cursor.fetchall()]
 
@@ -110,7 +113,7 @@ class DBOperations:
   def fetch_months(self, year):
     """ This method is used to return a dictionary of months given in a year of data """
     try:
-      with DBCM("samples.sqlite") as cursor:
+      with DBCM(self.database) as cursor:
         cursor.execute(f"select distinct substr(sample_date, 0, 8) from samples where sample_date like '{year}%' order by DATE(sample_date) desc")
         return [dict(row) for row in cursor.fetchall()]
 
@@ -120,7 +123,7 @@ class DBOperations:
   def is_table_exist(self):
     """ This method is used to check if we have a db table named samples """
     try:
-      with DBCM("samples.sqlite") as cursor:
+      with DBCM(self.database) as cursor:
         cursor.execute("select COUNT(*) from sqlite_master where name = 'samples'")
         if cursor.fetchone()[0] == 1:
           pub.sendMessage('change_accessibility', enabled=True)
