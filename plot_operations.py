@@ -27,8 +27,8 @@ class PlotOperations:
 
         fig, ax = plt.subplots()
         fig.canvas.set_window_title(f"Weather Processor: {start_year}-{end_year}")
-        ax.set_title(f"{start_year}-{end_year}")
-        plt.ylabel('Mean Temperature')
+        ax.set_title(f"Monthly Temperature Distribution for: {start_year} to {end_year}")
+        plt.ylabel('Temperature (Celsius)')
         plt.xlabel('Month')
 
         january, february, march, april, may, june, july, august, september, october, november, december = [],[],[],[],[],[],[],[],[],[],[],[]
@@ -72,10 +72,10 @@ class PlotOperations:
         fig, ax = plt.subplots()
         fig.canvas.set_window_title(f"Weather Processor: {date_as_date.strftime('%B, %Y')}")
         ax.xaxis.set_major_formatter(day_format)
-        plt.ylabel('Mean Temperature')
+        plt.ylabel('Temperature (Celsius)')
         plt.xlabel('Day')
 
-        ax.set_title(date_as_date.strftime("%B, %Y"))
+        ax.set_title(f"Daily Temperature Distribution for: {date_as_date.strftime('%B, %Y')}")
 
         mean_temps = []
         dates = []
