@@ -15,8 +15,8 @@ class DBOperations():
   This class manages all the db components needed for the weather data.
   """
 
-  def __init__(self, _database):
-    self.database = _database
+  def __init__(self, database):
+    self.database = database
 
   def fetch_data(self, start, end, is_month):
     """ This function fetchs the range of data from the db as requested by the user. """
@@ -31,6 +31,7 @@ class DBOperations():
 
         cursor.execute(f"select sample_date, avg_temp from samples where sample_date between '{start_date}' and '{end_date}' order by DATE(sample_date) asc")
         return [dict(row) for row in cursor.fetchall()]
+
     except Exception as e:
       logging.error(f"dboperations:fetch_data, {e}")
 
@@ -48,19 +49,19 @@ class DBOperations():
           set_data.append(f"{str(year)}-{month:02d}-{str(day)}")
           set_data.append(location)
 
-          for value in temps.items():
+          for key, value in temps.items():
             """ Iterates through the days data adding it to a list that is used with the insert statement. """
             try:
               set_data.append(value)
 
             except Exception as e:
-              logging.error(f"dboperations:fetch_data:loop:2, {e}")
+              logging.error(f"dboperations:save_data:loop:2, {e}")
 
           with DBCM(self.database) as cursor:
             cursor.execute(sql, set_data)
 
         except Exception as e:
-          logging.error(f"dboperations:fetch_data:loop, {e}")
+          logging.error(f"dboperations:save_data:loop, {e}")
 
     except Exception as e:
       logging.error(f"dboperations:save_data, {e}")
