@@ -83,7 +83,6 @@ class WeatherProcessor:
       today = date.today()
       year = int(today.strftime("%Y"))
       month = int(today.strftime("%m"))
-      year_dict = dict()
       duplicate_month,duplicate_day = False, False
       recent_date = ""
 

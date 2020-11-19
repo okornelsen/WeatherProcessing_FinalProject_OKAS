@@ -48,7 +48,7 @@ class DBOperations():
           set_data.append(f"{str(year)}-{month:02d}-{str(day)}")
           set_data.append(location)
 
-          for key, value in temps.items():
+          for value in temps.items():
             """ Iterates through the days data adding it to a list that is used with the insert statement. """
             try:
               set_data.append(value)
