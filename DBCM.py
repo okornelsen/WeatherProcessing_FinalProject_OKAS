@@ -19,8 +19,8 @@ class DBCM:
     try:
       self._db = database
 
-    except expression as identifier:
-      logging.error("dbcm:__init__, ", identifier)
+    except Exception as e:
+      logging.error(f"dbcm:__init__, {e}")
 
   def __enter__(self):
     """ Establishes cursor connection to be used in db_operations. """
@@ -30,8 +30,8 @@ class DBCM:
       self.cursor = self.conn.cursor()
       return self.cursor
 
-    except expression as identifier:
-      logging.error("dbcm:__enter__, ", identifier)
+    except Exception as e:
+      logging.error(f"dbcm:__enter__, {e}")
 
   def __exit__(self, exc_type, exc_value, exc_trace):
     """ Commits changes to the database and closes the cursor and database connection. """
@@ -40,5 +40,5 @@ class DBCM:
       self.cursor.close()
       self.conn.close()
 
-    except expression as identifier:
-      logging.error("dbcm:__exit__, ", identifier)
+    except Exception as e:
+      logging.error(f"dbcm:__exit__, {e}")

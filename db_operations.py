@@ -28,8 +28,8 @@ class DBOperations:
 
         cursor.execute(f"select date, mean_temp from wpg_weather where date between '{start_date}' and '{end_date}' order by DATE(date) asc")
         return [dict(row) for row in cursor.fetchall()]
-    except expression as identifier:
-      logging.error("dboperations:fetch_data, ", identifier)
+    except Exception as e:
+      logging.error(f"dboperations:fetch_data, {e}")
 
 
   def save_data(self, data, month, year):
@@ -50,17 +50,17 @@ class DBOperations:
             try:
               set_data.append(value)
 
-            except expression as identifier:
-              logging.error("dboperations:fetch_data:loop:2, ", identifier)
+            except Exception as e:
+              logging.error(f"dboperations:fetch_data:loop:2, {e}")
 
           with DBCM("wpg_weather.sqlite") as cursor:
             cursor.execute(sql, set_data)
 
-        except expression as identifier:
-          logging.error("dboperations:fetch_data:loop, ", identifier)
+        except Exception as e:
+          logging.error(f"dboperations:fetch_data:loop, {e}")
 
-    except expression as identifier:
-      logging.error("dboperations:save_data, ", identifier)
+    except Exception as e:
+      logging.error(f"dboperations:save_data, {e}")
 
   def initialize_db(self):
     """ This method is used to initialize the db """
@@ -74,8 +74,8 @@ class DBOperations:
                     min_temp real not null,
                     mean_temp real not null);""")
 
-    except expression as identifier:
-      logging.error("dboperations:initialize_db, ", identifier)
+    except Exception as e:
+      logging.error(f"dboperations:initialize_db, {e}")
 
   def purge_data(self):
     """ This method is used to purge the table in the database """
@@ -84,8 +84,8 @@ class DBOperations:
         with DBCM("wpg_weather.sqlite") as cursor:
             cursor.execute("drop table wpg_weather")
 
-    except expression as identifier:
-      logging.error("dboperations:purge_data, ", identifier)
+    except Exception as e:
+      logging.error(f"dboperations:purge_data, {e}")
 
   def fetch_last(self):
     """ This method is used to get the most recent date from the db """
@@ -94,8 +94,8 @@ class DBOperations:
         cursor.execute("select date from wpg_weather order by DATE(date) desc limit 1")
         return [dict(row) for row in cursor.fetchall()]
 
-    except expression as identifier:
-      logging.error("dboperations:fetch_last, ", identifier)
+    except Exception as e:
+      logging.error(f"dboperations:fetch_last, {e}")
 
   def fetch_first(self):
     """ This method is used to get the least recent date from the db """
@@ -104,8 +104,8 @@ class DBOperations:
         cursor.execute("select date from wpg_weather order by DATE(date) asc limit 1")
         return [dict(row) for row in cursor.fetchall()]
 
-    except expression as identifier:
-      logging.error("dboperations:fetch_first, ", identifier)
+    except Exception as e:
+      logging.error(f"dboperations:fetch_first, {e}")
 
   def fetch_months(self, year):
     """ This method is used to return a dictionary of months given in a year of data """
@@ -114,8 +114,8 @@ class DBOperations:
         cursor.execute(f"select distinct substr(date, 0, 8) from wpg_weather where date like '{year}%' order by DATE(date) desc")
         return [dict(row) for row in cursor.fetchall()]
 
-    except expression as identifier:
-      logging.error("dboperations:fetch_months, ", identifier)
+    except Exception as e:
+      logging.error(f"dboperations:fetch_months, {e}")
 
   def is_table_exist(self):
     """ This method is used to check if we have a db table named wpg_weather """
@@ -129,5 +129,5 @@ class DBOperations:
           pub.sendMessage('change_accessibility', enabled=False)
           return False
 
-    except expression as identifier:
-      logging.error("dboperations:is_table_exist, ", identifier)
+    except Exception as e:
+      logging.error(f"dboperations:is_table_exist, {e}")

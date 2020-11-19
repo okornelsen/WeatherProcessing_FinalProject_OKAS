@@ -17,16 +17,16 @@ class UI(frmMain):
 
       self.txtLatestUpload.SetValue(self.wp.last_updated)
 
-    except expression as identifier:
-      logging.error("ui:__init__, ", identifier)
+    except Exception as e:
+      logging.error(f"ui:__init__, {e}")
 
   def btnBoxOnButtonClick( self, event ):
     """Generates the box plot giving it the values of the start and end year combo boxes."""
     try:
       self.wp.get_box_plot(self.cboBoxStart.GetStringSelection(), self.cboBoxEnd.GetStringSelection())
 
-    except expression as identifier:
-      logging.error("ui:btnBoxOnButtonClick, ", identifier)
+    except Exception as e:
+      logging.error(f"ui:btnBoxOnButtonClick, {e}")
 
   def cboBoxStartOnChoice( self, event ):
     """When the choice for start year changes update the end year dropdown to start from the selected start year."""
@@ -35,16 +35,16 @@ class UI(frmMain):
       self.cboBoxEnd.AppendItems(self.wp.get_years_for_dropdown(self.cboBoxStart.GetStringSelection()))
       self.cboBoxEnd.SetSelection( 0 )
 
-    except expression as identifier:
-      logging.error("ui:cboBoxStartOnChoice, ", identifier)
+    except Exception as e:
+      logging.error(f"ui:cboBoxStartOnChoice, {e}")
 
   def btnLineOnButtonClick( self, event ):
     """Generate the line plot using the year and month selected by the user."""
     try:
       self.wp.get_line_plot(self.cboLineYear.GetStringSelection(), self.cboLineMonth.GetStringSelection())
 
-    except expression as identifier:
-      logging.error("ui:btnLineOnButtonClick, ", identifier)
+    except Exception as e:
+      logging.error(f"ui:btnLineOnButtonClick, {e}")
 
 
   def cboLineYearOnChoice( self, event ):
@@ -54,8 +54,8 @@ class UI(frmMain):
       self.cboLineMonth.AppendItems(self.wp.get_months_for_dropdown(self.cboLineYear.GetStringSelection()))
       self.cboLineMonth.SetSelection( 0 )
 
-    except expression as identifier:
-      logging.error("ui:cboLineYearOnChoice, ", identifier)
+    except Exception as e:
+      logging.error(f"ui:cboLineYearOnChoice, {e}")
 
   def btnDownloadOnButtonClick( self, event ):
     """Downloads the weather data, and sets up a subscription to update the textbox."""
@@ -67,8 +67,8 @@ class UI(frmMain):
       self.txtLatestDownload.AppendText("Complete!")
       self.populate_cbo()
 
-    except expression as identifier:
-      logging.error("ui:btnDownloadOnButtonClick, ", identifier)
+    except Exception as e:
+      logging.error(f"ui:btnDownloadOnButtonClick, {e}")
 
   def btnUpdateOnButtonClick( self, event ):
     """ Updates the weather data with any missing data.
@@ -78,8 +78,8 @@ class UI(frmMain):
       self.txtLatestUpload.SetValue(self.wp.last_updated)
       self.populate_cbo()
 
-    except expression as identifier:
-      logging.error("ui:btnUpdateOnButtonClick, ", identifier)
+    except Exception as e:
+      logging.error(f"ui:btnUpdateOnButtonClick, {e}")
 
   def update_latest_download(self, year):
     """Sets the textbox to display the most recent Year downloaded."""
@@ -87,8 +87,8 @@ class UI(frmMain):
       self.txtLatestDownload.Clear()
       self.txtLatestDownload.AppendText(year)
 
-    except expression as identifier:
-      logging.error("ui:update_latest_download, ", identifier)
+    except Exception as e:
+      logging.error(f"ui:update_latest_download, {e}")
 
   def change_accessibility(self, enabled):
     """ """
@@ -97,8 +97,8 @@ class UI(frmMain):
       self.btnLine.Enable(enabled)
       self.btnUpdate.Enable(enabled)
 
-    except expression as identifier:
-      logging.error("ui:change_accessibility, ", identifier)
+    except Exception as e:
+      logging.error(f"ui:change_accessibility, {e}")
 
   def populate_cbo(self):
     """Populates the combo boxes"""
@@ -118,6 +118,6 @@ class UI(frmMain):
       self.cboLineYear.SetSelection( 0 )
       self.cboLineMonth.SetSelection( 0 )
 
-    except expression as identifier:
-      logging.error("ui:populate_cbo, ", identifier)
+    except Exception as e:
+      logging.error(f"ui:populate_cbo, {e}")
 

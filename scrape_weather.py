@@ -26,8 +26,8 @@ class WeatherScraper(HTMLParser):
       self.count_col = 0
       self.date = ""
 
-    except expression as identifier:
-      logging.error("weatherscraper:__init__, ", identifier)
+    except Exception as e:
+      logging.error(f"weatherscraper:__init__, {e}")
 
   def handle_starttag(self, tag, attrs):
     """ Builds list stack for every tag element we enter into.
@@ -37,8 +37,8 @@ class WeatherScraper(HTMLParser):
       if tag == "td":
         self.count_col += 1
 
-    except expression as identifier:
-      logging.error("weatherscraper:handle_starttag, ", identifier)
+    except Exception as e:
+      logging.error(f"weatherscraper:handle_starttag, {e}")
 
 
   def handle_endtag(self, tag):
@@ -56,11 +56,11 @@ class WeatherScraper(HTMLParser):
           if item == tag:
             break
 
-        except expression as identifier:
-          logging.error("weatherscraper:handle_endtag:loop, ", identifier)
+        except Exception as e:
+          logging.error(f"weatherscraper:handle_endtag:loop, {e}")
 
-    except expression as identifier:
-      logging.error("weatherscraper:handle_endtag, ", identifier)
+    except Exception as e:
+      logging.error(f"weatherscraper:handle_endtag, {e}")
 
 
   def handle_data(self, data):
@@ -97,8 +97,8 @@ class WeatherScraper(HTMLParser):
             self.weather[self.date] = self.daily_temps
             self.daily_temps = dict()
 
-    except expression as identifier:
-      logging.error("weatherscraper:handle_data, ", identifier)
+    except Exception as e:
+      logging.error(f"weatherscraper:handle_data, {e}")
 
   def return_dict(self):
     """ Returns the weather as a dictionary. """
@@ -107,8 +107,8 @@ class WeatherScraper(HTMLParser):
       self.weather = dict()
       return temp_weather
 
-    except expression as identifier:
-      logging.error("weatherscraper:return_dict, ", identifier)
+    except Exception as e:
+      logging.error(f"weatherscraper:return_dict, {e}")
 
   def get_url(self, year, month):
     """ Retrieves the url used in db operations to collect data. """
@@ -118,5 +118,5 @@ class WeatherScraper(HTMLParser):
       month_url = f"&Month={str(month)}"
       return urlstring + year_url + month_url
 
-    except expression as identifier:
-      logging.error("weatherscraper:get_url, ", identifier)
+    except Exception as e:
+      logging.error(f"weatherscraper:get_url, {e}")

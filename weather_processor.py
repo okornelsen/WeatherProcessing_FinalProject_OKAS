@@ -29,8 +29,8 @@ class WeatherProcessor:
       self.last_updated = self.db.fetch_last()[0]["date"] if self.db.is_table_exist() else ""
       self.first_updated = self.db.fetch_first()[0]["date"] if self.db.is_table_exist() else ""
 
-    except expression as identifier:
-      logging.error("weatherprocessor:__init__, ", identifier)
+    except Exception as e:
+      logging.error(f"weatherprocessor:__init__, {e}")
 
   def download_data(self):
     """ Clears the database, reinitializes it, then downloads all the data to it. """
@@ -39,8 +39,8 @@ class WeatherProcessor:
       self.db.initialize_db()
       self.collect_data()
 
-    except expression as identifier:
-      logging.error("weatherprocessor:download_data, ", identifier)
+    except Exception as e:
+      logging.error(f"weatherprocessor:download_data, {e}")
 
   def update_data(self):
     """ Ensures the database exists then downloads all
@@ -50,8 +50,8 @@ class WeatherProcessor:
       self.collect_data()
       self.last_updated = self.db.fetch_last()[0]["date"]
 
-    except expression as identifier:
-      logging.error("weatherprocessor:update_data, ", identifier)
+    except Exception as e:
+      logging.error(f"weatherprocessor:update_data, {e}")
 
   def get_box_plot(self, start_year, end_year):
     """ Fetches data within the users inputted range then
@@ -60,8 +60,8 @@ class WeatherProcessor:
       weather = self.db.fetch_data(start_year,int(end_year) + 1,False)
       self.pl.generate_box_plot(weather, start_year, end_year)
 
-    except expression as identifier:
-      logging.error("weatherprocessor:get_box_plot, ", identifier)
+    except Exception as e:
+      logging.error(f"weatherprocessor:get_box_plot, {e}")
 
   def get_line_plot(self, year, month):
     """ User inputs the month and year of the data to be fetched
@@ -70,8 +70,8 @@ class WeatherProcessor:
       weather = self.db.fetch_data(year,month,True)
       self.pl.generate_line_plot(weather, year, month)
 
-    except expression as identifier:
-      logging.error("weatherprocessor:get_line_plot, ", identifier)
+    except Exception as e:
+      logging.error(f"weatherprocessor:get_line_plot, {e}")
 
   def collect_data(self):
     """ This method collects the data by looping through and prepping for save,
@@ -127,25 +127,25 @@ class WeatherProcessor:
                       break
                     temp_dict[key] = value
 
-                  except expression as identifier:
-                    logging.error("weatherprocessor:collect_data:loop:loop2:loop3, ", identifier)
+                  except Exception as e:
+                    logging.error(f"weatherprocessor:collect_data:loop:loop2:loop3, {e}")
 
                 month_dict[month] = temp_dict
               self.db.save_data(month_dict[month], month, year)
               month -= 1
 
-            except expression as identifier:
-              logging.error("weatherprocessor:collect_data:loop:loop2, ", identifier)
+            except Exception as e:
+              logging.error(f"weatherprocessor:collect_data:loop:loop2, {e}")
 
           pub.sendMessage('update_latest_download', year=str(year))
           month = 12
           year -= 1
 
-        except expression as identifier:
-          logging.error("weatherprocessor:collect_data:loop, ", identifier)
+        except Exception as e:
+          logging.error(f"weatherprocessor:collect_data:loop, {e}")
 
-    except expression as identifier:
-      logging.error("weatherprocessor:collect_data, ", identifier)
+    except Exception as e:
+      logging.error(f"weatherprocessor:collect_data, {e}")
 
 
   def get_years_for_dropdown(self, min_year):
@@ -171,13 +171,13 @@ class WeatherProcessor:
             years.append(str(firstyear))
             firstyear += 1
 
-          except expression as identifier:
-            logging.error("weatherprocessor:get_years_for_dropdown:loop, ", identifier)
+          except Exception as e:
+            logging.error(f"weatherprocessor:get_years_for_dropdown:loop, {e}")
 
       return years
 
-    except expression as identifier:
-      logging.error("weatherprocessor:get_years_for_dropdown, ", identifier)
+    except Exception as e:
+      logging.error(f"weatherprocessor:get_years_for_dropdown, {e}")
 
 
   def get_months_for_dropdown(self, year):
@@ -203,13 +203,13 @@ class WeatherProcessor:
               try:
                 months.append(str(value[-2:]))
 
-              except expression as identifier:
-                logging.error("weatherprocessor:get_months_for_dropdown:loop:loop2, ", identifier)
+              except Exception as e:
+                logging.error(f"weatherprocessor:get_months_for_dropdown:loop:loop2, {e}")
 
-          except expression as identifier:
-            logging.error("weatherprocessor:get_months_for_dropdown:loop, ", identifier)
+          except Exception as e:
+            logging.error(f"weatherprocessor:get_months_for_dropdown:loop, {e}")
 
       return months[::-1]
 
-    except expression as identifier:
-      logging.error("weatherprocessor:get_months_for_dropdown, ", identifier)
+    except Exception as e:
+      logging.error(f"weatherprocessor:get_months_for_dropdown, {e}")

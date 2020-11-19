@@ -13,6 +13,5 @@ try:
     frm.Show()
     app.MainLoop()
 
-except expression as identifier:
-  logging.error("main_ui", identifier)
-  logging.error("main_ui, ", identifier)
+except Exception as e:
+  logging.error(f"main_ui, {e}")
