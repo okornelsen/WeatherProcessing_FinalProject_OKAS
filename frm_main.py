@@ -146,7 +146,7 @@ class frmMain ( wx.Frame ):
 
 		gSizer61 = wx.GridSizer( 0, 2, 0, 0 )
 
-		self.lblLatestDownload = wx.StaticText( self, wx.ID_ANY, u"Latest Month Downloaded:", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.lblLatestDownload = wx.StaticText( self, wx.ID_ANY, u"Last Year Downloaded:", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.lblLatestDownload.Wrap( -1 )
 		gSizer61.Add( self.lblLatestDownload, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, 5 )
 
@@ -190,7 +190,7 @@ class frmMain ( wx.Frame ):
 
 		gSizer6 = wx.GridSizer( 0, 2, 0, 0 )
 
-		self.lblLatestUpdated = wx.StaticText( self, wx.ID_ANY, u"Latest Date Updated:", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.lblLatestUpdated = wx.StaticText( self, wx.ID_ANY, u"Last Date Updated:", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.lblLatestUpdated.Wrap( -1 )
 		gSizer6.Add( self.lblLatestUpdated, 0, wx.ALL|wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 
